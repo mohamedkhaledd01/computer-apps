@@ -1,5 +1,5 @@
 function Navbar({ currentPage, setCurrentPage, user, onLogout }) {
-  const links = ["Dashboard", "Courses", "Users"];
+  const links = ["Dashboard", "Courses", "Assignments", "Enrollments", "Grades", "Users"];
 
   return (
     <header className="navbar">

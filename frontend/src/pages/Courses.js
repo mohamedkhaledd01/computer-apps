@@ -6,6 +6,7 @@ import { courseService } from "../services/lmsService";
 function Courses() {
   const [courses, setCourses] = useState([]);
   const [form, setForm] = useState({ title: "", description: "" });
+  const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState("");
 
   const loadCourses = async () => {
@@ -21,17 +22,47 @@ function Courses() {
     setForm({ ...form, [event.target.name]: event.target.value });
   };
 
+  const resetForm = () => {
+    setForm({ title: "", description: "" });
+    setEditingId(null);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage("");
 
     try {
-      await courseService.create(form);
-      setForm({ title: "", description: "" });
+      if (editingId) {
+        await courseService.update(editingId, form);
+        setMessage("Course updated");
+      } else {
+        await courseService.create(form);
+        setMessage("Course created");
+      }
+      resetForm();
       await loadCourses();
-      setMessage("Course created");
     } catch (error) {
-      setMessage(error.response?.data?.message || "Unable to create course");
+      setMessage(error.response?.data?.message || "Unable to save course");
+    }
+  };
+
+  const handleEdit = (course) => {
+    setEditingId(course.id);
+    setForm({ title: course.title, description: course.description });
+    setMessage("");
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this course?")) return;
+    setMessage("");
+
+    try {
+      await courseService.remove(id);
+      if (editingId === id) resetForm();
+      await loadCourses();
+      setMessage("Course deleted");
+    } catch (error) {
+      setMessage(error.response?.data?.message || "Unable to delete course");
     }
   };
 
@@ -39,30 +70,43 @@ function Courses() {
     <main className="page">
       <section className="page-header">
         <h1>Courses</h1>
-        <p>Create and review course records.</p>
+        <p>Create, edit, and manage course records.</p>
       </section>
 
       <section className="grid two-columns">
         <form className="panel form" onSubmit={handleSubmit}>
-          <h2>Create Course</h2>
+          <h2>{editingId ? "Edit Course" : "Create Course"}</h2>
           <FormInput label="Title" name="title" value={form.title} onChange={handleChange} />
           <label className="field">
             <span>Description</span>
             <textarea name="description" value={form.description} onChange={handleChange} required />
           </label>
-          <button className="primary" type="submit">
-            Save Course
-          </button>
-          <Message message={message} type={message.includes("Unable") ? "error" : "success"} />
+          <div className="form-actions">
+            <button className="primary" type="submit">
+              {editingId ? "Update Course" : "Save Course"}
+            </button>
+            {editingId && (
+              <button className="secondary" type="button" onClick={resetForm}>
+                Cancel
+              </button>
+            )}
+          </div>
+          <Message message={message} type={message.includes("Unable") || message.includes("delete") ? "error" : "success"} />
         </form>
 
         <section className="panel">
           <h2>Course List</h2>
           <div className="list">
             {courses.map((course) => (
-              <article className="list-item" key={course.id}>
-                <strong>{course.title}</strong>
-                <p>{course.description}</p>
+              <article className={`list-item ${editingId === course.id ? "editing" : ""}`} key={course.id}>
+                <div className="list-item-content">
+                  <strong>{course.title}</strong>
+                  <p>{course.description}</p>
+                </div>
+                <div className="list-item-actions">
+                  <button className="btn-edit" onClick={() => handleEdit(course)}>Edit</button>
+                  <button className="btn-delete" onClick={() => handleDelete(course.id)}>Delete</button>
+                </div>
               </article>
             ))}
             {!courses.length && <p className="muted">No courses found.</p>}

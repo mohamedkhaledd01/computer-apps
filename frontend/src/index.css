@@ -283,6 +283,139 @@ th {
   font-size: 13px;
 }
 
+/* Action buttons */
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.secondary {
+  background: #e2e8f0;
+  border: 0;
+  border-radius: 6px;
+  color: #334155;
+  font-weight: 700;
+  min-height: 42px;
+  padding: 10px 14px;
+}
+
+.secondary:hover {
+  background: #cbd5e1;
+}
+
+.btn-edit,
+.btn-delete {
+  background: transparent;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 5px 10px;
+}
+
+.btn-edit {
+  color: #2563eb;
+}
+
+.btn-edit:hover {
+  background: #dbeafe;
+  border-color: #2563eb;
+}
+
+.btn-delete {
+  color: #dc2626;
+}
+
+.btn-delete:hover {
+  background: #fee2e2;
+  border-color: #dc2626;
+}
+
+.btn-delete-sm {
+  background: transparent;
+  border: 0;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 6px;
+}
+
+.btn-delete-sm:hover {
+  color: #dc2626;
+}
+
+/* List item layout with actions */
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.list-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.list-item-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.list-item.editing {
+  border-color: #2563eb;
+  background: #f0f7ff;
+}
+
+tr.editing {
+  background: #f0f7ff;
+}
+
+.table-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* Dashboard panel lists */
+.panel-list {
+  border-top: 1px solid #e2e8f0;
+  margin-top: 16px;
+  padding-top: 12px;
+}
+
+.panel-list h3 {
+  color: #475569;
+  font-size: 13px;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.panel-list-item {
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  font-size: 13px;
+  gap: 8px;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.panel-list-item:last-child {
+  border-bottom: 0;
+}
+
+.panel-list-item span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 @media (max-width: 900px) {
   .navbar,
   .nav-user {
